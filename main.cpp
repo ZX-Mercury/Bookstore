@@ -163,8 +163,15 @@ int main() {
             }
             acc.change(UserID, NewPw);
         }
+
+
+        //***************
+        //图书指令区
+        else if (op == "select") {
+            std::string ISBN = tokens[1];
+            acc.loginStack.back().ISBN=ISBN;
+        }
             /*else if (op == "") {}
-            else if (op == "") {}
             else if (op == "") {}
             else if (op == "") {}*/
         else if (op == "exit") { return 0; }

@@ -16,7 +16,7 @@ public:
     };
     struct account2 {
         short int privilege;
-        std::string UserID;
+        std::string UserID, ISBN = "bucunzai";
     };
     std::unordered_map<std::string, account1> acs;//用户信息
     std::vector<account2> loginStack;
