@@ -254,6 +254,7 @@ int main() {
         else if (op == "exit") { break; }
         else std::cout << "IIIInvalid\n";
         //std::cout << "`";
+
     }
     Bdata.reinitial();
 }

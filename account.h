@@ -71,6 +71,7 @@ public:
     bool logcheck(const std::string& U, const std::string& P){
         return (P==acs[U].Password);
     }
+
 };
 
 #endif //BOOKSTORE_ACCOUNT_H
