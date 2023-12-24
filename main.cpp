@@ -18,7 +18,7 @@ const std::unordered_map<std::string, std::vector<int>> tokencheck = {
         //{"show",{1}},
         {"buy", {3}},
         {"select", {2}},
-        //{"modify",{1}},
+        {"modify",{1,2,3,4,5}},
         {"import", {3}},
 
         {"show", {2, 3}},
@@ -44,15 +44,17 @@ int main() {
     acc.create(7, "root", "sjtu");
     std::string s;
     short int currentRank;
-    std::string currentUser;
+    std::string currentUser,currentBook;
     while (getline(std::cin, s)) {
         //初始化当前用户信息
         if (!acc.loginStack.empty()) {
             currentRank = acc.loginStack.back().privilege;
             currentUser = acc.loginStack.back().UserID;
+            currentBook = acc.loginStack.back().ISBN;
         } else {
             currentRank = 0;
             currentUser = "bucunzai";
+            currentBook = "bucunzai";
         }
 
         //读入控制台输入
@@ -185,28 +187,73 @@ int main() {
                 std::cout << "Invalid\n";
                 continue;
             }
-            if (acc.loginStack.back().ISBN=="bucunzai"){
+            if (currentBook=="bucunzai"){
                 std::cout << "Invalid\n";
                 continue;
             }
-            for (int i = 1; i<=tokens.size();i++){
-                std::string require = tokens[1];
+            std::map<std::string ,std::string > tmp;
+            bool flag=true;
+            for (int i = 1; i<tokens.size();i++){
+                std::string require = tokens[i];
                 int j = 1;
-                std::string reop;
+                std::string reop, info;
                 while (require[j]!='='){
                     reop += require[j];
                     j++;
                 }
                 j++;
-                if (reop == ""){}
-                else if (reop == ""){}
+                if (reop == "ISBN"){
+                    while (j<require.length()) info+=require[j++];
+                    if (info==currentBook){//ISBN相同
+                        flag= false;
+                        break;}
+                }
+                else if (reop=="prise"){
+                    while (j<require.length()) info+=require[j++];
+                }
+                else {
+                    j++;
+                    while(j<require.length()-1) info+=require[j++];
+                }
+                if (tmp.find(reop)==tmp.end()){
+                    tmp[reop]=info;
+                }
+                else {//重复了
+                    flag = false;
+                    break;
+                }
+                if (info.empty()){//信息为空
+                    flag = false;
+                    break;
+                }
+                if(reop=="keyword" && !Bdata.checkkw(info)){
+                    flag = false;
+                    break;
+                }
+                tmp[reop]=info;
+            }
+            for(auto it = tmp.begin();it!=tmp.end();it++){
+                if(it->first =="ISBN"){
+                    Bdata.changeISBN(currentBook,it->second);
+                    currentBook = it->second;
+                    acc.loginStack.back().ISBN = it->second;
+                }
+                else if(it->first =="name"){
+                    Bdata.changename(currentBook,it->second);
+                }
+                else if(it->first =="author"){}
+                else if(it->first =="keyword"){}
+            }
+            if (!flag){
+                std::cout <<"Invalid\n";
+                continue;
             }
         }
         /*else if (op == "") {}
         else if (op == "") {}*/
         else if (op == "exit") { break; }
         else std::cout << "IIIInvalid\n";
-        std::cout << "`";
+        //std::cout << "`";
     }
     Bdata.reinitial();
 }

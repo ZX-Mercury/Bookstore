@@ -8,16 +8,24 @@
 class bookdata {
 private:
     std::fstream file;
-    int num = 0;
+    int num = 0, namenum = 0;
     const std::string NU = "bucunzai";
+    const int ONELINE = 240;
+    const int lenISBN = 20, lenname=60, lenauthor=60;
+    const int namessize = sizeof(names);
 public:
+    std::map<std::string,int> nametoindex;
     struct book {
         std::string ISBN;
         std::string bookname, author;
         std::vector<std::string> keyword;
         int quantity = 0, price = 0;
     };
-
+    struct names{
+        char name[60];
+        short int indx[10000];
+        int next =-1;
+    };
     std::unordered_map<std::string, int> ISindex;
 
     bookdata() = default;
@@ -30,9 +38,9 @@ public:
         file.close();
     }
 
-    std::unordered_map<std::string, int> cut (std::string ){
+    /*std::unordered_map<std::string, int> cut (std::string ){
         x
-    };
+    };*/
 
     void initialise() {
         file.open("num", std::ios::in | std::ios::out);
@@ -43,7 +51,6 @@ public:
             std::string nums;
             getline(file,nums);
             num=std::stoi(nums);
-            std::cout<<nums;
         }
         file.close();
         init2("bookdata");
@@ -96,6 +103,38 @@ public:
             file<<num;
             file.close();
         }
+    }
+    bool checkkw(const std::string& kw0){
+        //int i = 0;
+        std::string kw = kw0+"|";
+        std::set<std::string> set;
+        std::string tmp;
+        for (auto i : kw){
+            if (i!='|') tmp += i;
+            else {
+                if(tmp.empty()||set.count(tmp))
+                    return false;
+                set.insert(tmp);
+                tmp="";
+            }
+        }
+        return true;
+    }
+    void changeISBN(const std::string &be, const std::string &af){
+        int index = ISindex[be];
+        file.open("bookdata", std::ios::in | std::ios::out);
+        file.seekp(index*ONELINE+11);
+        file<<change(af,lenISBN);
+        file.close();
+    }
+    void changename(const std::string &isbn, const std::string &name){
+        int index = ISindex[isbn];
+        file.open("bookdata", std::ios::in | std::ios::out);
+        file.seekp(index*ONELINE+11);
+        file<<change(name,lenname);
+        file.close();
+        file.open("bookname");
+
     }
 };
 
