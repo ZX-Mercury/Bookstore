@@ -38,6 +38,8 @@ bool checktokens(const std::vector<std::string> &tokens) {
 
 
 int main() {
+    bookdata Bdata;
+    Bdata.initialise();
     accounts acc;
     acc.create(7, "root", "sjtu");
     std::string s;
@@ -137,7 +139,7 @@ int main() {
                 continue;
             }
             acc.del(UserID);
-        } else if (op == "passwd") {
+        }else if (op == "passwd") {
             if (!(currentRank >= 1)) {
                 std::cout << "Invalid\n";
                 continue;
@@ -168,14 +170,43 @@ int main() {
         //***************
         //图书指令区
         else if (op == "select") {
+            if (!(currentRank >= 3)) {
+                std::cout << "Invalid\n";
+                continue;
+            }
             std::string ISBN = tokens[1];
             acc.loginStack.back().ISBN=ISBN;
+            if (Bdata.ISindex.find(ISBN)==Bdata.ISindex.end()) {
+                Bdata.create(ISBN);
+            }
         }
-            /*else if (op == "") {}
-            else if (op == "") {}
-            else if (op == "") {}*/
-        else if (op == "exit") { return 0; }
+        else if (op == "modify") {
+            if (!(currentRank >= 3)) {
+                std::cout << "Invalid\n";
+                continue;
+            }
+            if (acc.loginStack.back().ISBN=="bucunzai"){
+                std::cout << "Invalid\n";
+                continue;
+            }
+            for (int i = 1; i<=tokens.size();i++){
+                std::string require = tokens[1];
+                int j = 1;
+                std::string reop;
+                while (require[j]!='='){
+                    reop += require[j];
+                    j++;
+                }
+                j++;
+                if (reop == ""){}
+                else if (reop == ""){}
+            }
+        }
+        /*else if (op == "") {}
+        else if (op == "") {}*/
+        else if (op == "exit") { break; }
         else std::cout << "IIIInvalid\n";
         std::cout << "`";
     }
+    Bdata.reinitial();
 }
