@@ -1,3 +1,8 @@
+/*TODO:抱歉我没能完成任务，留下了一个只能实现账户操作的半成品。
+ * 本来打算采用txt可见地呈现数据内容，但中途变换思路，最后什么都没有干成。T^T
+ * 评者可以看到bookdata.h中残存的代码，这就是基于字符串（而非二进制流）的、对ascii文件操作的代码。*/
+
+
 #include<iostream>
 #include<string>
 #include<bits/stdc++.h>
@@ -51,7 +56,8 @@ int main() {
             currentRank = acc.loginStack.back().privilege;
             currentUser = acc.loginStack.back().UserID;
             currentBook = acc.loginStack.back().ISBN;
-        } else {
+        }
+        else {
             currentRank = 0;
             currentUser = "bucunzai";
             currentBook = "bucunzai";
@@ -98,7 +104,8 @@ int main() {
                 }
             }
             acc.login(UserRK, UserID);
-        } else if (op == "useradd") {
+        }
+        else if (op == "useradd") {
             if (!(currentRank >= 3)) {
                 std::cout << "Invalid\n";
                 continue;
@@ -114,19 +121,22 @@ int main() {
                 continue;
             }
             acc.create(Privi, UserID, tokens[2]);
-        } else if (op == "logout") {
+        }
+        else if (op == "logout") {
             if (acc.loginStack.empty()) {
                 std::cout << "Invalid\n";
                 continue;
             }
             acc.logout();
-        } else if (op == "register") {
+        }
+        else if (op == "register") {
             if (acc.Isexist(tokens[1])) {
                 std::cout << "Invalid\n";
                 continue;
             }
             acc.create(1, tokens[1], tokens[2]);
-        } else if (op == "delete") {
+        }
+        else if (op == "delete") {
             std::string UserID = tokens[1];
             if (!(currentRank >= 7)) {
                 std::cout << "Invalid\n";
@@ -141,7 +151,8 @@ int main() {
                 continue;
             }
             acc.del(UserID);
-        }else if (op == "passwd") {
+        }
+        else if (op == "passwd") {
             if (!(currentRank >= 1)) {
                 std::cout << "Invalid\n";
                 continue;
@@ -249,8 +260,16 @@ int main() {
                 continue;
             }
         }
-        /*else if (op == "") {}
-        else if (op == "") {}*/
+        else if (op == "show") {}
+        else if (op == "buy") {
+            if (!(currentRank >= 1)) {
+                std::cout << "Invalid\n";
+                continue;
+            }
+            std::string ISBN = tokens[1];
+            int Quantity=stoi(tokens[2]);
+            std::cout<<Bdata.search(ISBN)*Quantity<<'\n';
+        }
         else if (op == "exit") { break; }
         else std::cout << "IIIInvalid\n";
         //std::cout << "`";
