@@ -134,9 +134,15 @@ public:
         file<<change(name,lenname);
         file.close();
         file.open("bookname");
-
-
     }
+    int search(const std::string &isbn){//未完工
+        file.open("bookdata", std::ios::in | std::ios::out);
+        //file.seekp(index*ONELINE+11);
+        file.close();
+        file.open("bookname");
+        return 0;
+    }
+
 };
 
 #endif //BOOKSTORE_BOOKDATA_H
